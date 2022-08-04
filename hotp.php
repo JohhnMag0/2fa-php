@@ -14,7 +14,7 @@ include('Base32.php');
 
 class HOTP
 {
-	// Transform the count on a 8 byte variable
+	// Transform the count on a binary 
 	private	function ByteCount($count) {
 		$byte_count = [];
 		for ($i = 7; $i >= 0; $i--){
@@ -34,9 +34,9 @@ class HOTP
 	}
 
 	private	function GenerateHash($key, $count, $algorithm) {
+		// Accepts only sha type algorithms
 		$sha = ['sha1','sha256','sha512'];
 
-		// Accepts only sha type algorithms
 		if (!in_array($algorithm, $sha)) {
 			exit("Algorithm NOT SUPPORTED. Algorithms accept are sha1, sha256 and sha512");
 		}
@@ -79,6 +79,8 @@ class HOTP
 	// <https://github.com/google/google-authenticator/wiki/Key-Uri-Format>
 	public function GenerateURI($key, $user, $issuer, $counter = 0, $algorithm = 'sha1', $digits = 6) {
 		$secret = Base32::encode($key);
-		echo "otpauth://hotp/$user?secret=$secret&issuer=$issuer&algorithm=$algorithm&digits=$digits&counter=$counter";
+		$URI = "otpauth://hotp/$user?secret=$secret&issuer=$issuer&algorithm=$algorithm&digits=$digits&counter=$counter";
+		
+		return $URI;
 	}
 }

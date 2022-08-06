@@ -10,7 +10,7 @@
  *  Version: Alpha.1  
  * ***********************************************/
 
-include('Base32.php');
+include('base.php');
 
 class HOTP
 {
@@ -78,7 +78,7 @@ class HOTP
 	// Generate URI based on Google Authenticator standard
 	// <https://github.com/google/google-authenticator/wiki/Key-Uri-Format>
 	public function GenerateURI($key, $user, $issuer, $counter = 0, $algorithm = 'sha1', $digits = 6) {
-		$secret = Base32::encode($key);
+		$secret = Base::b32encode($key);
 		$URI = "otpauth://hotp/$user?secret=$secret&issuer=$issuer&algorithm=$algorithm&digits=$digits&counter=$counter";
 		
 		return $URI;

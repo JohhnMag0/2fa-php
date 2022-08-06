@@ -10,9 +10,7 @@
  *  Version: Alpha
  * ***********************************************/
 
-// INTERVALO DE TEMPO(Aceita mais de 30 segundos)
-// google não aceita mais que 30
-include('Base32.php');
+include('base.php');
 
 class TOTP
 {
@@ -100,7 +98,7 @@ class TOTP
     // Generate URI based on Google Authenticator standard
     // <https://github.com/google/google-authenticator/wiki/Key-Uri-Format>
     public function GenerateURI($key, $user, $issuer, $period = 30, $algorithm = 'sha1', $digits = 6) {
-        $secret = Base32::encode($key);
+        $secret = Base::b32encode($key);
         $URI = "otpauth://totp/$user?secret=$secret&issuer=$issuer&algorithm=$algorithm&digits=$digits&period=$period";
 
         return $URI;

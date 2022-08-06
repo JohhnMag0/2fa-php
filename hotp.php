@@ -11,6 +11,7 @@
  * ***********************************************/
 
 include('base.php');
+include('qrcode.php');
 
 class HOTP
 {
@@ -33,12 +34,12 @@ class HOTP
 		return $str_count;
 	}
 
-	private	function GenerateHash($key, $count, $algorithm) {
+	private	function Hash($key, $count, $algorithm) {
 		// Accepts only sha type algorithms
 		$sha = ['sha1','sha256','sha512'];
 
 		if (!in_array($algorithm, $sha)) {
-			exit("Algorithm NOT SUPPORTED. Algorithms accept are sha1, sha256 and sha512");
+			exit("Algorithm ".$algorithm." NOT SUPPORTED. Algorithms accept are sha1, sha256 and sha512");
 		}
 		else {
 			$hash = hash_hmac($algorithm, $count, $key);
@@ -46,7 +47,7 @@ class HOTP
 		}
 	}
 
-	private	function GenerateToken($hash, $length) {
+	private	function Token($hash, $length) {
 		$decimal = [];	
 		// Turn the hash in a decimal 
 		foreach (str_split($hash, 2) as $hex) {
@@ -67,20 +68,47 @@ class HOTP
 	}
 
 	// Glue all the things
-	public function Otp($key, $count = 0, $length = 6, $algorithm = 'sha1') {
+	public function OTP($key, $count = 0, $length = 6, $algorithm = 'sha1') {
 		$count = $this->ByteCount($count);
-		$hash = $this->GenerateHash($key, $count, $algorithm);
-		$token= $this->GenerateToken($hash, $length);
+		$hash = $this->Hash($key, $count, $algorithm);
+		$token= $this->Token($hash, $length);
 
 		return $token;
 	}
 	
 	// Generate URI based on Google Authenticator standard
 	// <https://github.com/google/google-authenticator/wiki/Key-Uri-Format>
-	public function GenerateURI($key, $user, $issuer, $counter = 0, $algorithm = 'sha1', $digits = 6) {
+	public function URI($key, $user, $issuer, $counter = 0, $algorithm = 'sha1', $digits = 6) {
 		$secret = Base::b32encode($key);
 		$URI = "otpauth://hotp/$user?secret=$secret&issuer=$issuer&algorithm=$algorithm&digits=$digits&counter=$counter";
 		
 		return $URI;
+	}
+
+	// Create the QRCode as a gif image 
+	public function QRCodeImage($uri, $path = 'qrcode.gif') {
+		$qr = new QRCode();
+		
+		//Defines the size of the QRCode
+		$qr->setTypeNumber(10);
+
+		//Creates the QRCode
+		$qr->addData($uri);
+		$qr->make();
+		$image = $qr->createImage();
+
+		imagegif($image, $path);
+	}
+
+	// Creates the QRCode to use in HTML
+	public function QRCodeHTML($uri) {
+		$qr = new QRCode();
+		$qr->setTypeNumber(10);
+		$qr->addData($uri);
+		$qr->make();
+		
+		$html = $qr->printHTML();
+
+		return $html;
 	}
 }

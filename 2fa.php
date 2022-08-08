@@ -3,13 +3,26 @@
  *  Generates a code that changes according to the
  *  usage count. According to RFC 4226.
  *  <https://datatracker.ietf.org/doc/html/rfc4226>
- *
  *	
  *	Name:	 2fa
  *  Author:  John Mago0
  *  Date:    2022-08-03
- *  Version: Alpha.1  
- * ***********************************************/
+ *  Version: 1
+ * ***********************************************
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>
+ */
+
 
 include('base.php');
 include('qrcode.php');
@@ -40,7 +53,7 @@ class HOTP
 		$sha = ['sha1','sha256','sha512'];
 
 		if (!in_array($algorithm, $sha)) {
-			exit("Algorithm ".$algorithm." NOT SUPPORTED. Algorithms accept are sha1, sha256 and sha512");
+			exit("2fa ERROR! Algorithm ".$algorithm." NOT SUPPORTED. Algorithms accept are sha1, sha256 and sha512");
 		}
 		else {
 			$hash = hash_hmac($algorithm, $count, $key);
@@ -74,7 +87,7 @@ class HOTP
 		$hash = $this->Hash($key, $count, $algorithm);
 
 		if ($length > 10) {
-			exit("Number of digits can't be greater than 10");
+			exit("2fa ERROR! Number of digits can't be greater than 10");
 		}
 		
 		$token= $this->Token($hash, $length);
@@ -87,7 +100,7 @@ class HOTP
 	public function URI($key, $user, $issuer, $counter = 0, $algorithm = 'sha1', $digits = 6) {
 
 		if ($digits > 10) {
-			exit("Number of digits can't be greater than 10");
+			exit("2fa ERROR! Number of digits can't be greater than 10");
 		}
 		
 		$secret = Base::b32encode($key);
@@ -156,7 +169,7 @@ class TOTP extends HOTP
             $unix_time = $this->VerifyNTP();
         }
         else {
-            exit('ERROR! NTP = '.$ntp.'. Function accepts only true or false values');
+            exit('2fa ERROR! NTP = '.$ntp.'. Function accepts only true or false values');
         }
 
         $binary_timestamp = pack('N*', 0) . pack('N*', floor($unix_time/$period));
@@ -170,7 +183,7 @@ class TOTP extends HOTP
         $hash = parent::Hash($key, $time, $algorithm);
 
         if ($length > 10) {
-            exit("Number of digits can't be greater than 10");
+            exit("2fa ERROR! Number of digits can't be greater than 10");
         }
         
         $token= parent::Token($hash, $length);
@@ -183,7 +196,7 @@ class TOTP extends HOTP
     public function URI($key, $user, $issuer, $period = 30, $algorithm = 'sha1', $digits = 6) {
 
         if ($digits > 10) {
-            exit("Number of digits can't be greater than 10");
+            exit("2fa ERROR! Number of digits can't be greater than 10");
         }
         
         $secret = Base::b32encode($key);

@@ -3,7 +3,7 @@
 A simple TOTP and HOTP library for php. With this library you can generate tokens, URI's and QRcodes.
 
 # Usage
-
+____
 ## Token
 
 If you just want to generate a simple token with 6 digits, count 0(for HOTP) or 30 seconds(for TOTP) and sha1 as the algorithm, just use as follow:
@@ -22,7 +22,7 @@ echo $x->OTP('hello');
 echo $y->OTP('hello');
 ```
 
-If you want to modify the token that will be generate will can adjust some variables:
+If you want to modify the token that will be generate you can adjust some variables:
 
 ```
 $x = new TOTP();
@@ -42,7 +42,7 @@ $ntp = true;
 echo $x->OTP('hello', $time, $digits, $algo, $ntp);
 ```
 
-For generate a URI:
+Generating a URI:
 
 ```
 $x = new TOTP();
@@ -82,7 +82,8 @@ echo $qr;
 $path = '/tmp/qrcode.gif';
 $x->QRCodeImage($path);
 ``` 
+___
+# Documentation
+If you want to get an overview of how this library works under the hood, I have an article that ~~tries to~~ explain some of the technology being used. You can see this article on here: 
 
-# License
-
-GPL version 3.0
+OBS.: It's very important to say that the QRCode library was not made by me. The one that is being used is part of this project: https://github.com/kazuhikoarase/qrcode-generator. So kudos to Kazuhikoarase for making this beautiful library.

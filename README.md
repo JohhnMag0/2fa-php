@@ -84,6 +84,6 @@ $x->QRCodeImage($path);
 ``` 
 ___
 # Documentation
-If you want to get an overview of how this library works under the hood, I have an article that ~~tries to~~ explain some of the technology being used. You can see this article on here: 
+If you want to get an overview of how this library works under the hood, I have an article that ~~tries to~~ explain some of the technology being used. You can see this article on here: https://johhnmag0.github.io/post/2022/08/08/2fa-authentication-php/
 
 OBS.: It's very important to say that the QRCode library was not made by me. The one that is being used is part of this project: https://github.com/kazuhikoarase/qrcode-generator. So kudos to Kazuhikoarase for making this beautiful library.
